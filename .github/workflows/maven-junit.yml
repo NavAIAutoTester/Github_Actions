@@ -29,11 +29,17 @@ jobs:
       - name: Run unit tests
         run: mvn -B clean test
 
+      - name: Generate Surefire HTML report
+        if: always()
+        run: mvn -B surefire-report:report-only
+
       - name: Upload Surefire reports
         if: always()
         uses: actions/upload-artifact@v7
         with:
           name: surefire-reports
-          path: target/surefire-reports/
+          path: |
+            target/surefire-reports/
+            target/reports/
           retention-days: 14
           if-no-files-found: warn

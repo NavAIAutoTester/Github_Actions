@@ -2,7 +2,7 @@
 
 This guide is for someone who knows basic Java and is new to GitHub Actions. It follows one small Maven project, `navaneeth:Github_Actions:1.0-SNAPSHOT`. The project compiles as Java 17. Its only test class is `navaneeth.CalculatorTest`. Maven Surefire Plugin 3.6.0 runs that class.
 
-Read the first six sections to understand the workflow that is in the repo today. Sections 7 and 8 explain the reports and the Maven commands. Sections 9 and 10 are extra options. The workflow file does not use those options yet.
+Read the first six sections to understand the workflow that is in the repo today. Sections 7 and 8 explain the reports and the Maven commands. Sections 9 and 10 are extra options. The workflow file does not use those options yet. [Section 11](#11-re-run-the-jobs-from-the-actions-tab) is the click path to re-run the job from the Actions tab.
 
 1. [This project](#1-this-project)
 2. [What GitHub Actions is](#2-what-github-actions-is)
@@ -14,6 +14,7 @@ Read the first six sections to understand the workflow that is in the repo today
 8. [Maven commands](#8-maven-commands)
 9. [Run the tests on one branch](#9-run-the-tests-on-one-branch)
 10. [More events, actions, steps, and jobs](#10-more-events-actions-steps-and-jobs)
+11. [Re-run the jobs from the Actions tab](#11-re-run-the-jobs-from-the-actions-tab)
 
 ## 1. This project
 
@@ -520,7 +521,7 @@ on:
   workflow_dispatch:
 ```
 
-After that change is on the repository's default branch, open the **Actions** tab, select **Maven JUnit tests**, and choose **Run workflow**. **Use workflow from** is the branch GitHub will check out. Pick `feature/calculator` or `main`, then run it. That branch must contain `.github/workflows/maven-junit.yml`. GitHub runs the YAML from the branch you picked.
+After that change is on the repository's default branch, open the **Actions** tab, select **Maven JUnit tests**, and choose **Run workflow**. **Use workflow from** is the branch GitHub will check out. Pick `feature/calculator` or `main`, then run it. That branch must contain `.github/workflows/maven-junit.yml`. GitHub runs the YAML from the branch you picked. Until that line is on the default branch, re-run the job from the run list with the clicks in [section 11](#11-re-run-the-jobs-from-the-actions-tab).
 
 A manual run is the `workflow_dispatch` event. It does not need a new commit. In the log, `github.ref` is `refs/heads/feature/calculator` when that branch was selected, and `github.sha` is the latest commit on the branch.
 
@@ -878,3 +879,29 @@ Read it with the words from [section 2](#2-what-github-actions-is):
 - **Actions** are `actions/checkout@v7` and `actions/setup-java@v6`.
 
 The file GitHub runs today is the shorter one in [section 4](#4-the-workflow-file-line-by-line): `push` and `pull_request`, one Ubuntu job, Temurin 17, `mvn -B clean test`, and an upload of `target/surefire-reports`. Add the pieces from this section when you want a manual run, a schedule, a second JDK, or a jar that is built only after the tests pass.
+
+## 11. Re-run the jobs from the Actions tab
+
+These are the clicks to re-run **Maven JUnit tests** from the run list. The list is the **Actions** page whose heading is **Maven JUnit tests**.
+
+### Re-run all jobs
+
+1. Open this repository on GitHub.
+2. Click the **Actions** tab.
+3. In the left sidebar, under **Workflows**, click **Maven JUnit tests**.
+4. In the run list, click the run title. That title is the commit message. On the current **main** run it is **Added example code to demostrate github action flow**. The line under the title is **Maven JUnit tests #1**.
+5. On the run page, at the upper right, click **Re-run jobs**.
+6. Click **Re-run all jobs**.
+
+GitHub starts a new attempt of the **Maven JUnit tests** job on the same commit and the same branch. The status icon on that run turns yellow while the attempt runs.
+
+### Re-run failed jobs
+
+1. Open this repository on GitHub.
+2. Click the **Actions** tab.
+3. In the left sidebar, under **Workflows**, click **Maven JUnit tests**.
+4. In the run list, click the run title.
+5. On the run page, at the upper right, click **Re-run jobs**.
+6. Click **Re-run failed jobs**.
+
+**Re-run failed jobs** runs the failed job again on the same commit. On a green run, such as **Maven JUnit tests #1** with a green check, that menu item is unavailable. Use **Re-run all jobs** for that run.
